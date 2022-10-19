@@ -1,0 +1,50 @@
+version: "3.7"
+services:
+    basic:
+        build:
+            context: ./
+            dockerfile: Dockerfile
+        image: basic
+        container_name: "basic"
+        restart: unless-stopped
+        working_dir: /var/www
+        volumes:
+            - ../../:/var/www
+        extra_hosts:
+            - "host.docker.internal:host-gateway"
+        environment:
+            PHP_IDE_CONFIG: serverName=server
+        links:
+            - db
+        networks:
+            - app-network
+    nginx:
+        image: nginx:latest
+        container_name: "basic-nginx"
+        restart: unless-stopped
+        ports:
+            - "8000:80"
+        volumes:
+            - ../../:/var/www
+            - ./conf/nginx:/etc/nginx/conf.d
+        links:
+            - basic
+            - db
+        networks:
+            - app-network
+    db:
+        image: mysql:8.0.28
+        container_name: "basic-db"
+        restart: unless-stopped
+        ports:
+            - "3306:3306"
+        environment:
+            MYSQL_DATABASE: basic
+            MYSQL_USER: basic
+            MYSQL_ROOT_PASSWORD: secret
+            MYSQL_PASSWORD: secret
+        networks:
+            - app-network
+networks:
+    app-network:
+        driver: bridge
