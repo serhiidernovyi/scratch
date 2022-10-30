@@ -4,11 +4,7 @@ namespace App\Providers;
 
 
 use App\Events\ForgotEvent;
-use App\Events\NotifyEvent;
 use App\Listeners\SendForgotEmail;
-use App\Listeners\SendNotifyEmail;
-use Product\Events\StatusItemEvent;
-use Product\Listeners\SetItemStatus;
 use Illuminate\Auth\Events\Registered;
 use App\Listeners\SendVerificationEmail;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
@@ -26,12 +22,6 @@ class EventServiceProvider extends ServiceProvider
         ],
         ForgotEvent::class => [
             SendForgotEmail::class,
-        ],
-        StatusItemEvent::class => [
-            SetItemStatus::class,
-        ],
-        NotifyEvent::class => [
-            SendNotifyEmail::class,
         ],
     ];
 
